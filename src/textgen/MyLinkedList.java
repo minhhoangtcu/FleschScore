@@ -56,7 +56,25 @@ public class MyLinkedList<E> extends AbstractList<E> {
 			size++;
 			return true;
 		} else
-			return false;
+			throw new NullPointerException();
+	}
+
+	public boolean addEnd(E element) {
+		if (element != null) {
+			LLNode<E> node = new LLNode<E>(element);
+			if (isEmpty()) {
+				head = node;
+				tail = node;
+			} else {
+				node.next = tail;
+				node.prev = tail.prev;
+				tail.prev.next = node;
+				tail.prev = node;
+			}
+			size++;
+			return true;
+		} else
+			throw new NullPointerException();
 	}
 
 	/**
@@ -85,30 +103,29 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	 *            The element to add
 	 */
 	public void add(int index, E element) {
-		if (!isValidIndex(index))
-			throw new IndexOutOfBoundsException();
-		else if (element == null)
+		if (element == null)
 			throw new NullPointerException();
+		else if ((index == size) | (index == 0 && isEmpty()))
+			add(element); // add to the end of the list
+		else if (!isValidIndex(index))
+			throw new IndexOutOfBoundsException();
+		else if (index == size - 1)
+			addEnd(element);
+		else if (index == 0)
+			addFront(element);
 		else {
-			if (index == size - 1)
-				add(element);
-			else if (index == 0) {
-				addFront(element);
-			} else {
-				LLNode<E> pushing = head;
-				for (int i = 0; i < index; i++) {
-					pushing = pushing.next;
-				}
-
-				LLNode<E> newNode = new LLNode<E>(element);
-				newNode.next = pushing;
-				newNode.prev = pushing.prev;
-				pushing.prev = newNode;
-				newNode.prev.next = newNode;
-				size++;
+			LLNode<E> pushing = head;
+			for (int i = 0; i < index; i++) {
+				pushing = pushing.next;
 			}
+
+			LLNode<E> newNode = new LLNode<E>(element);
+			newNode.next = pushing;
+			newNode.prev = pushing.prev;
+			pushing.prev = newNode;
+			newNode.prev.next = newNode;
+			size++;
 		}
-			
 	}
 
 	/** Return the size of the list */
@@ -199,16 +216,26 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	 *             if the index is out of bounds.
 	 */
 	public E set(int index, E element) {
-		// TODO: do not allow set as null
-		if (isValidIndex(index)) {
+		if (element == null)
+			throw new NullPointerException();
+		else if (!isValidIndex(index))
+			throw new IndexOutOfBoundsException();
+		else {
 			LLNode<E> node = head;
 			for (int i = 0; i < index; i++) {
 				node = node.next;
 			}
 			node.data = element;
 			return node.data;
-		} else
-			throw new IndexOutOfBoundsException();
+		}
+	}
+
+	public void printList() {
+		LLNode<E> runner = head;
+		while (runner != null) {
+			System.out.print(runner + "\t");
+			runner = runner.next;
+		}
 	}
 }
 
@@ -217,13 +244,14 @@ class LLNode<E> {
 	LLNode<E> next;
 	E data;
 
-	// TODO: Add any other methods you think are useful here
-	// E.g. you might want to add another constructor
-
 	public LLNode(E e) {
 		this.data = e;
 		this.prev = null;
 		this.next = null;
+	}
+
+	public String toString() {
+		return data + "";
 	}
 
 }

@@ -206,10 +206,13 @@ public class MyLinkedListTester {
 		catch (IndexOutOfBoundsException e) { }
 		
 		try {
-			emptyList.add(0, 10);
-			fail("Check out of bound");
+			emptyList.add(0, null);
+			fail("Added null element");
 		}
-		catch (IndexOutOfBoundsException e) { }
+		catch (NullPointerException e) { }
+		
+		emptyList.add(0, 10);
+		assertEquals("Check empty list first", 10, (int)emptyList.get(0));
 		
 		assertEquals(5, (int) longerList.get(5));
 		longerList.add(5, 100);
@@ -241,7 +244,47 @@ public class MyLinkedListTester {
 		catch (IndexOutOfBoundsException e) { }
 	}
 	
-	
-	// TODO: Optionally add more test methods.
-	
+	/** Test adding and removing nodes on a new list */
+	@Test
+	public void testAll() {
+		MyLinkedList<String> tempList = new MyLinkedList<String>();
+		tempList.add("A");
+		tempList.add("B");
+		tempList.add("C");
+		assertEquals(3, tempList.size);
+		
+		tempList.remove(0);
+		assertEquals(2, tempList.size);
+		assertEquals("B", tempList.get(0));
+		
+		tempList.add(0, "A");
+		assertEquals("A", tempList.get(0));
+		assertEquals(3, tempList.size);
+		
+		tempList.add(2, "D");
+		assertEquals("D", tempList.get(2));
+		assertEquals("C", tempList.get(3));
+		assertEquals(4, tempList.size);
+		
+		try {
+			tempList.add(-1, "D");
+			fail("Out of Bound");
+		}
+		catch (IndexOutOfBoundsException e) {}
+		
+		try {
+			tempList.add(5, "D");
+			fail("Out of Bound");
+		}
+		catch (IndexOutOfBoundsException e) {}
+		
+		try {
+			tempList.add(1, null);
+			fail("Null element added");
+		}
+		catch (NullPointerException e) {}
+		
+		tempList.add(4, "E");
+		assertEquals("E", tempList.get(4));
+	}
 }
