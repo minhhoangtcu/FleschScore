@@ -114,7 +114,39 @@ public class MyLinkedListTester {
 		assertEquals("Remove: check element 0 is correct ", (Integer)21, list1.get(0));
 		assertEquals("Remove: check size is correct ", 2, list1.size());
 		
-		// TODO: Add more tests here
+		try {
+			emptyList.remove(0);
+			fail("Check out of bounds");
+		}
+		catch (IndexOutOfBoundsException e) { }
+		
+		try {
+			emptyList.remove(-1);
+			fail("Check out of bounds");
+		}
+		catch (IndexOutOfBoundsException e) { }
+		
+		try {
+			longerList.remove(11);
+			fail("Check out of bounds");
+		}
+		catch (IndexOutOfBoundsException e) { }
+		
+		int b = list1.remove(1);
+		assertEquals("Remove: check b is correct ", 42, b);
+		assertEquals("Remove: check size is correct ", 1, list1.size());
+		
+		try {
+			list1.remove(1);
+			fail("Check out of bounds");
+		}
+		catch (IndexOutOfBoundsException e) { }
+		
+		int c = longerList.remove(5);
+		assertEquals("Remove: check c is correct ", 5, c);
+		assertEquals("Remove: check element 5 is correct ", (Integer)6, longerList.get(5));
+		assertEquals("Remove: check element 4 is correct ", (Integer)4, longerList.get(4));
+		assertEquals("Remove: check size is correct ", 9, longerList.size());
 	}
 	
 	/** Test adding an element into the end of the list, specifically
@@ -128,7 +160,12 @@ public class MyLinkedListTester {
 		assertTrue(list1.add(50));
 		assertTrue(list1.add(20));
 		assertTrue(list1.add(10));
-		assertFalse(list1.add(null));
+		
+		try {
+			list1.add(null);
+		}
+		catch (NullPointerException e) { }
+		
 	}
 
 	
@@ -184,8 +221,24 @@ public class MyLinkedListTester {
 	@Test
 	public void testSet()
 	{
-	    // TODO: implement this test
-	    
+		shortList.set(0, "C");
+		assertEquals("Check short list first", "C", shortList.get(0));
+		shortList.set(0, "D");
+		assertEquals("Check short list second", "D", shortList.get(0));
+		shortList.set(1, "E");
+		assertEquals("Check short list third", "E", shortList.get(1));
+		
+		try {
+			shortList.set(10, "B");
+			fail("Check out of bound");
+		}
+		catch (IndexOutOfBoundsException e) { }
+		
+		try {
+			emptyList.set(0, 10);
+			fail("Check out of bound");
+		}
+		catch (IndexOutOfBoundsException e) { }
 	}
 	
 	

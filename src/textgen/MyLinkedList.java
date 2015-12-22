@@ -1,13 +1,15 @@
 package textgen;
 
 import java.util.AbstractList;
+import java.util.EmptyStackException;
 
-
-/** A class that implements a doubly linked list
+/**
+ * A class that implements a doubly linked list
  * 
  * @author UC San Diego Intermediate Programming MOOC team
  *
- * @param <E> The type of the elements stored in the list
+ * @param <E>
+ *            The type of the elements stored in the list
  */
 public class MyLinkedList<E> extends AbstractList<E> {
 	LLNode<E> head;
@@ -21,10 +23,11 @@ public class MyLinkedList<E> extends AbstractList<E> {
 
 	/**
 	 * Appends an element to the end of the list
-	 * @param element The element to add
+	 * 
+	 * @param element
+	 *            The element to add
 	 */
-	public boolean add(E element ) 
-	{
+	public boolean add(E element) {
 		if (element != null) {
 			LLNode<E> node = new LLNode<E>(element);
 			if (isEmpty())
@@ -36,11 +39,10 @@ public class MyLinkedList<E> extends AbstractList<E> {
 			tail = node;
 			size++;
 			return true;
-		}
-		else
-			return false;
+		} else
+			throw new NullPointerException();
 	}
-	
+
 	public boolean addFront(E element) {
 		if (element != null) {
 			LLNode<E> node = new LLNode<E>(element);
@@ -57,40 +59,43 @@ public class MyLinkedList<E> extends AbstractList<E> {
 			return false;
 	}
 
-	/** Get the element at position index 
-	 * @throws IndexOutOfBoundsException if the index is out of bounds. */
-	public E get(int index) 
-	{
+	/**
+	 * Get the element at position index
+	 * 
+	 * @throws IndexOutOfBoundsException
+	 *             if the index is out of bounds.
+	 */
+	public E get(int index) {
 		if (isValidIndex(index)) {
 			LLNode<E> node = head;
 			for (int i = 0; i < index; i++) {
 				node = node.next;
 			}
 			return node.data;
-		}
-		else
+		} else
 			throw new IndexOutOfBoundsException();
 	}
 
 	/**
 	 * Add an element to the list at the specified index
-	 * @param The index where the element should be added
-	 * @param element The element to add
+	 * 
+	 * @param The
+	 *            index where the element should be added
+	 * @param element
+	 *            The element to add
 	 */
-	public void add(int index, E element ) 
-	{
+	public void add(int index, E element) {
 		if (isValidIndex(index)) {
-			if (index == size-1) 
+			if (index == size - 1)
 				add(element);
 			else if (index == 0) {
 				addFront(element);
-			}
-			else {
+			} else {
 				LLNode<E> pushing = head;
 				for (int i = 0; i < index; i++) {
 					pushing = pushing.next;
 				}
-				
+
 				LLNode<E> newNode = new LLNode<E>(element);
 				newNode.next = pushing;
 				newNode.prev = pushing.prev;
@@ -98,63 +103,111 @@ public class MyLinkedList<E> extends AbstractList<E> {
 				newNode.prev.next = newNode;
 				size++;
 			}
-		}
-		else
+		} else
 			throw new IndexOutOfBoundsException();
 	}
 
-
 	/** Return the size of the list */
-	public int size() 
-	{
+	public int size() {
 		return size;
 	}
-	
+
 	/** Return the true if the list in empty */
 	public boolean isEmpty() {
 		return size == 0;
 	}
-	
+
 	/**
 	 * Return true if the provided index is valid index of the list
-	 * @param index The index to check if it is in the bound of the list
+	 * 
+	 * @param index
+	 *            The index to check if it is in the bound of the list
 	 * @return return true if index is in the bound, false if otherwise
 	 */
 	public boolean isValidIndex(int index) {
 		if (isEmpty())
 			return false;
 		else
-			return (index>=0 && index<=size-1);
+			return (index >= 0 && index <= size - 1);
 	}
 
-	/** Remove a node at the specified index and return its data element.
-	 * @param index The index of the element to remove
+	/**
+	 * Remove a node at the specified index and return its data element.
+	 * 
+	 * @param index
+	 *            The index of the element to remove
 	 * @return The data element removed
-	 * @throws IndexOutOfBoundsException If index is outside the bounds of the list
+	 * @throws IndexOutOfBoundsException
+	 *             If index is outside the bounds of the list
 	 * 
 	 */
-	public E remove(int index) 
-	{
-		// TODO: Implement this method
-		return null;
+	public E remove(int index) {
+		if (isValidIndex(index)) {
+			if (index == size - 1)
+				return removeEnd();
+			else if (index == 0)
+				return removeFront();
+			else {
+				LLNode<E> node = head;
+				for (int i = 0; i < index; i++) {
+					node = node.next;
+				}
+				node.prev.next = node.next;
+				node.next.prev = node.prev;
+				size--;
+				return node.data;
+			}
+		} else
+			throw new IndexOutOfBoundsException();
+	}
+
+	public E removeFront() {
+		if (!isEmpty()) {
+			E output = head.data;
+			head.next.prev = null;
+			head = head.next;
+			size--;
+			return output;
+		} else
+			throw new EmptyStackException();
+	}
+
+	public E removeEnd() {
+		if (!isEmpty()) {
+			E output = tail.data;
+			tail.prev.next = null;
+			tail = tail.prev;
+			size--;
+			return output;
+		} else
+			throw new EmptyStackException();
 	}
 
 	/**
 	 * Set an index position in the list to a new element
-	 * @param index The index of the element to change
-	 * @param element The new element
+	 * 
+	 * @param index
+	 *            The index of the element to change
+	 * @param element
+	 *            The new element
 	 * @return The element that was replaced
-	 * @throws IndexOutOfBoundsException if the index is out of bounds.
+	 * @throws IndexOutOfBoundsException
+	 *             if the index is out of bounds.
 	 */
-	public E set(int index, E element) 
-	{
-		// TODO: Implement this method
-		return null;
-	}   
+	public E set(int index, E element) {
+		if (isValidIndex(index)) {
+			LLNode<E> node = head;
+			for (int i = 0; i < index; i++) {
+				node = node.next;
+			}
+			node.data = element;
+			return node.data;
+		} else
+			throw new IndexOutOfBoundsException();
+	}
 }
 
-class LLNode<E> 
-{
+class LLNode<E> {
 	LLNode<E> prev;
 	LLNode<E> next;
 	E data;
@@ -162,8 +215,7 @@ class LLNode<E>
 	// TODO: Add any other methods you think are useful here
 	// E.g. you might want to add another constructor
 
-	public LLNode(E e) 
-	{
+	public LLNode(E e) {
 		this.data = e;
 		this.prev = null;
 		this.next = null;
