@@ -85,7 +85,11 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	 *            The element to add
 	 */
 	public void add(int index, E element) {
-		if (isValidIndex(index)) {
+		if (!isValidIndex(index))
+			throw new IndexOutOfBoundsException();
+		else if (element == null)
+			throw new NullPointerException();
+		else {
 			if (index == size - 1)
 				add(element);
 			else if (index == 0) {
@@ -103,8 +107,8 @@ public class MyLinkedList<E> extends AbstractList<E> {
 				newNode.prev.next = newNode;
 				size++;
 			}
-		} else
-			throw new IndexOutOfBoundsException();
+		}
+			
 	}
 
 	/** Return the size of the list */
@@ -195,6 +199,7 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	 *             if the index is out of bounds.
 	 */
 	public E set(int index, E element) {
+		// TODO: do not allow set as null
 		if (isValidIndex(index)) {
 			LLNode<E> node = head;
 			for (int i = 0; i < index; i++) {
