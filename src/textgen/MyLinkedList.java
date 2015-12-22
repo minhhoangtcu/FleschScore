@@ -57,7 +57,7 @@ public class MyLinkedList<E> extends AbstractList<E> {
 			return true;
 		} else
 			throw new NullPointerException();
-	}
+		}
 
 	public boolean addEnd(E element) {
 		if (element != null) {
@@ -163,11 +163,15 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	 * 
 	 */
 	public E remove(int index) {
-		if (isValidIndex(index)) {
-			if (index == size - 1)
-				return removeEnd();
-			else if (index == 0)
+		if (isEmpty())
+			throw new EmptyStackException();
+		else if (!isValidIndex(index))
+			throw new IndexOutOfBoundsException();
+		else {
+			if (index == 0)
 				return removeFront();
+			else if (index == size - 1)
+				return removeEnd();
 			else {
 				LLNode<E> node = head;
 				for (int i = 0; i < index; i++) {
@@ -178,30 +182,41 @@ public class MyLinkedList<E> extends AbstractList<E> {
 				size--;
 				return node.data;
 			}
-		} else
-			throw new IndexOutOfBoundsException();
+		}
 	}
 
 	public E removeFront() {
-		if (!isEmpty()) {
-			E output = head.data;
+		if (isEmpty())
+			throw new EmptyStackException();
+		
+		E output = head.data;
+		if (size == 1) {
+			head = null;
+			tail = null;
+		}
+		else {
 			head.next.prev = null;
 			head = head.next;
-			size--;
-			return output;
-		} else
-			throw new EmptyStackException();
+		}
+		size--;
+		return output;
 	}
 
 	public E removeEnd() {
-		if (!isEmpty()) {
-			E output = tail.data;
+		if (isEmpty())
+			throw new EmptyStackException();
+		
+		E output = tail.data;
+		if (size == 1) {
+			head = null;
+			tail = null;
+		}
+		else {
 			tail.prev.next = null;
 			tail = tail.prev;
-			size--;
-			return output;
-		} else
-			throw new EmptyStackException();
+		}
+		size--;
+		return output;
 	}
 
 	/**
@@ -253,5 +268,4 @@ class LLNode<E> {
 	public String toString() {
 		return data + "";
 	}
-
 }

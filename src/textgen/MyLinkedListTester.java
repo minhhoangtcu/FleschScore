@@ -5,6 +5,7 @@ package textgen;
 
 import static org.junit.Assert.*;
 
+import java.util.EmptyStackException;
 import java.util.LinkedList;
 
 import org.junit.Before;
@@ -118,13 +119,13 @@ public class MyLinkedListTester {
 			emptyList.remove(0);
 			fail("Check out of bounds");
 		}
-		catch (IndexOutOfBoundsException e) { }
+		catch (EmptyStackException e) { }
 		
 		try {
 			emptyList.remove(-1);
 			fail("Check out of bounds");
 		}
-		catch (IndexOutOfBoundsException e) { }
+		catch (EmptyStackException e) { }
 		
 		try {
 			longerList.remove(11);
@@ -284,7 +285,25 @@ public class MyLinkedListTester {
 		}
 		catch (NullPointerException e) {}
 		
+		try {
+			tempList.get(-1);
+			fail("Out of bound");
+		}
+		catch (IndexOutOfBoundsException e) {}
+		
+		try {
+			tempList.get(6);
+			fail("Out of bound");
+		}
+		catch (IndexOutOfBoundsException e) {}
+		
 		tempList.add(4, "E");
 		assertEquals("E", tempList.get(4));
+		
+		tempList.remove(0);
+		tempList.remove(0);
+		tempList.remove(0);
+		tempList.remove(0);
+		tempList.remove(0);
 	}
 }
