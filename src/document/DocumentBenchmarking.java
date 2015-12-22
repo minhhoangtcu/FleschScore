@@ -28,7 +28,7 @@ public class DocumentBenchmarking {
 
 		// The number of steps to run.  
 		// You can play around with this.
-		int numSteps = 20;
+		int numSteps = 40;
 		
 		// THe number of characters to start with. 
 		// You can play around with this.

@@ -16,7 +16,7 @@ public class MyLinkedList<E> extends AbstractList<E> {
 
 	/** Create a new empty LinkedList */
 	public MyLinkedList() {
-		// TODO: Implement this method
+		size = 0;
 	}
 
 	/**
@@ -25,16 +25,51 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	 */
 	public boolean add(E element ) 
 	{
-		// TODO: Implement this method
-		return false;
+		if (element != null) {
+			LLNode<E> node = new LLNode<E>(element);
+			if (isEmpty())
+				head = node;
+			else {
+				tail.next = node;
+				node.prev = tail;
+			}
+			tail = node;
+			size++;
+			return true;
+		}
+		else
+			return false;
+	}
+	
+	public boolean addFront(E element) {
+		if (element != null) {
+			LLNode<E> node = new LLNode<E>(element);
+			if (isEmpty())
+				tail = node;
+			else {
+				node.next = head;
+				head.prev = node;
+			}
+			head = node;
+			size++;
+			return true;
+		} else
+			return false;
 	}
 
 	/** Get the element at position index 
 	 * @throws IndexOutOfBoundsException if the index is out of bounds. */
 	public E get(int index) 
 	{
-		// TODO: Implement this method.
-		return null;
+		if (isValidIndex(index)) {
+			LLNode<E> node = head;
+			for (int i = 0; i < index; i++) {
+				node = node.next;
+			}
+			return node.data;
+		}
+		else
+			throw new IndexOutOfBoundsException();
 	}
 
 	/**
@@ -44,15 +79,52 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	 */
 	public void add(int index, E element ) 
 	{
-		// TODO: Implement this method
+		if (isValidIndex(index)) {
+			if (index == size-1) 
+				add(element);
+			else if (index == 0) {
+				addFront(element);
+			}
+			else {
+				LLNode<E> pushing = head;
+				for (int i = 0; i < index; i++) {
+					pushing = pushing.next;
+				}
+				
+				LLNode<E> newNode = new LLNode<E>(element);
+				newNode.next = pushing;
+				newNode.prev = pushing.prev;
+				pushing.prev = newNode;
+				newNode.prev.next = newNode;
+				size++;
+			}
+		}
+		else
+			throw new IndexOutOfBoundsException();
 	}
 
 
 	/** Return the size of the list */
 	public int size() 
 	{
-		// TODO: Implement this method
-		return -1;
+		return size;
+	}
+	
+	/** Return the true if the list in empty */
+	public boolean isEmpty() {
+		return size == 0;
+	}
+	
+	/**
+	 * Return true if the provided index is valid index of the list
+	 * @param index The index to check if it is in the bound of the list
+	 * @return return true if index is in the bound, false if otherwise
+	 */
+	public boolean isValidIndex(int index) {
+		if (isEmpty())
+			return false;
+		else
+			return (index>=0 && index<=size-1);
 	}
 
 	/** Remove a node at the specified index and return its data element.
