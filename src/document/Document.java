@@ -45,34 +45,29 @@ public abstract class Document {
 	// This is a helper function that returns the number of syllables
 	// in a word.  You should write this and use it in your 
 	// BasicDocument class.
-	// You will probably NOT need to add a countWords or a countSentences method
-	// here.  The reason we put countSyllables here because we'll use it again
-	// next week when we implement the EfficientDocument class.
-	protected int countSyllables(String word)
+	protected static int countSyllables(String word)
 	{
-		String regexOfVowelsWithNoEndingE = "[aeiouy]+(?=e$)";
-		String regexOfVowels = "[aeiouy]+";
-		String regexOfEndingE = "e$";
-		int numberOfVowels = getTokensInWord(word, regexOfVowels).size();
-		int numberOfEndingE = getTokensInWord(word, regexOfEndingE).size();
-		int numberOfVowesWithNoEndingE = getTokensInWord(word, regexOfVowelsWithNoEndingE).size();
-		if (numberOfVowels == numberOfEndingE  && numberOfVowesWithNoEndingE != 1) // means that the ending e is the only vowels. 
-			return 1;
-		else {
-			return numberOfVowels - numberOfEndingE + numberOfVowesWithNoEndingE;
+	    //System.out.print("Counting syllables in " + word + "...");
+		int numSyllables = 0;
+		boolean newSyllable = true;
+		String vowels = "aeiouy";
+		char[] cArray = word.toCharArray();
+		for (int i = 0; i < cArray.length; i++)
+		{
+		    if (i == cArray.length-1 && Character.toLowerCase(cArray[i]) == 'e' 
+		    		&& newSyllable && numSyllables > 0) {
+                numSyllables--;
+            }
+		    if (newSyllable && vowels.indexOf(Character.toLowerCase(cArray[i])) >= 0) {
+				newSyllable = false;
+				numSyllables++;
+			}
+			else if (vowels.indexOf(Character.toLowerCase(cArray[i])) < 0) {
+				newSyllable = true;
+			}
 		}
-	}
-	
-	protected List<String> getTokensInWord(String word, String pattern) {
-		ArrayList<String> tokens = new ArrayList<String>();
-		Pattern tokSplitter = Pattern.compile(pattern);
-		Matcher m = tokSplitter.matcher(word);
-		
-		while (m.find()) {
-			tokens.add(m.group());
-		}
-		
-		return tokens;
+		//System.out.println( "found " + numSyllables);
+		return numSyllables;
 	}
 	
 	/** A method for testing
@@ -135,7 +130,10 @@ public abstract class Document {
 	/** return the Flesch readability score of this document */
 	public double getFleschScore()
 	{
-	    return 206.835 - 1.015*((double)getNumWords()/getNumSentences()) - 84.6*((double)getNumSyllables()/getNumWords());
+		double wordCount = (double)getNumWords();
+		return 206.835 - (1.015 * ((wordCount)/getNumSentences())) 
+				- (84.6 * (((double)getNumSyllables())/wordCount));
+	
 	}
 	
 	
