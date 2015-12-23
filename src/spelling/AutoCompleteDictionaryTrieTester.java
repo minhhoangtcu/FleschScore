@@ -160,7 +160,18 @@ public class AutoCompleteDictionaryTrieTester {
 		assertEquals(0, completions.size());
 	}
 	
-	
+	@Test
+	public void testAddMini() {
+		assertEquals(true, smallDict.addWord("tobeornot"));
+		assertEquals(false, smallDict.addWord("tobeornot"));
+		assertEquals(true, smallDict.addWord("tobeornotw"));
+		assertEquals(true, smallDict.addWord("tobeorno"));
+		assertEquals(true, smallDict.addWord("t"));
+		assertEquals(true, smallDict.addWord("to"));
+		assertEquals(true, smallDict.addWord("tob"));
+		assertEquals(false, smallDict.addWord("to"));
+		assertEquals(false, smallDict.addWord("ToBeorno"));
+	}
 	
 	
 }
