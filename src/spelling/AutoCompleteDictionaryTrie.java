@@ -1,10 +1,8 @@
 package spelling;
 
-import java.util.List;
-import java.util.Set;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 /** 
  * An trie data structure that implements the Dictionary and the AutoComplete ADT
@@ -80,8 +78,7 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
      * @param n The maximum number of predictions desired.
      * @return A list containing the up to n best predictions
      */@Override
-     public List<String> predictCompletions(String prefix, int numCompletions) 
-     {
+     public List<String> predictCompletions(String prefix, int numCompletions) {
     	 // TODO: Implement this method
     	 // This method should implement the following algorithm:
     	 // 1. Find the stem in the trie.  If the stem does not appear in the trie, return an
@@ -96,9 +93,31 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
     	 //       If it is a word, add it to the completions list
     	 //       Add all of its child nodes to the back of the queue
     	 // Return the list of completions
-    	 
-         return null;
-     }
+		prefix = prefix.toLowerCase();
+		TrieNode current = root;
+
+		for (char c : prefix.toCharArray()) {
+			if (current.getValidNextCharacters().contains(c))
+				current = current.getChild(c);
+			else
+				return null;
+		}
+
+		Queue<TrieNode> queue = new LinkedList<>();
+		List<String> words = new LinkedList<>();
+		queue.add(current);
+
+		while (!queue.isEmpty()) {
+			TrieNode pointer = queue.remove();
+			if (pointer.endsWord())
+				words.add(pointer.getText());
+			for (char nextChild : pointer.getValidNextCharacters()) {
+				queue.add(pointer.getChild(nextChild));
+			}
+		}
+
+		return words;
+	}
 
  	// For debugging
  	public void printTree()
