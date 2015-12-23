@@ -31,12 +31,10 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 		TrieNode current = root;
 		
 		for(char c: word.toCharArray()) {
-			if (current.getValidNextCharacters().contains(c)) {
+			if (current.getValidNextCharacters().contains(c))
 				current = current.getChild(c);
-			}
-			else {
+			else
 				current = current.insert(c);
-			}
 		}
 		
 		if (!current.endsWord()) {
@@ -54,17 +52,24 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	 */
 	public int size()
 	{
-	    //TODO: Implement this method
-	    return 0;
+	    return size;
 	}
 	
 	
 	/** Returns whether the string is a word in the trie */
 	@Override
-	public boolean isWord(String s) 
-	{
-	    // TODO: Implement this method
-		return false;
+	public boolean isWord(String word) {
+		word = word.toLowerCase();
+		TrieNode current = root;
+		
+		for(char c: word.toCharArray()) {
+			if (current.getValidNextCharacters().contains(c))
+				current = current.getChild(c);
+			else
+				return false;
+		}
+		
+		return current.endsWord();
 	}
 
 	/** 
